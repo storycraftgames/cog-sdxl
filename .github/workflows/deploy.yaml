@@ -1,0 +1,47 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+    
+    env:
+      GCP_PROJECT_ID: storycraft-shared
+      REGISTRY_HOST: us-docker.pkg.dev
+      REGISTRY_REPO: storycraft
+      MODEL: sdxl
+      VERSION: "0.0.5"
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Authenticate with Google Cloud
+      uses: 'google-github-actions/auth@v2'
+      with:
+        credentials_json: '${{ secrets.GCP_SA_KEY }}'
+        
+    - name: Login to Artifact Registry
+      uses: google-github-actions/setup-gcloud@v2
+
+    - name: Configure Docker for Artifact Registry
+      run: |
+        gcloud auth configure-docker ${{ env.REGISTRY_HOST }} --quiet
+        
+    - name: Install Cog
+      uses: replicate/setup-cog@v1
+      with:
+        install-cuda: false
+    
+    - name: Build image
+      run: |
+        export IMAGE=${{ env.REGISTRY_HOST }}/${{ env.GCP_PROJECT_ID }}/${{ env.REGISTRY_REPO }}/${{ env.MODEL }}
+        
+        cog build -t $IMAGE:latest
+      
+        docker tag $IMAGE:latest $IMAGE:${{ env.VERSION }}
+        docker push $IMAGE:${{ env.VERSION }}
