@@ -35,7 +35,7 @@ jobs:
     - name: Install Cog
       uses: replicate/setup-cog@v1
       with:
-        install-cuda: false
+        install-cuda: true
     
     - name: Build image
       run: |
