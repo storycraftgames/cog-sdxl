@@ -1,7 +1,7 @@
 import torch
 import cog
 
-class Predictor(cog.Predictor):
+class Predictor(BasePredictor):
     def setup(self):
         """Load the model or other assets here."""
         # No model to load for this example, setup is used to prepare environment if necessary
