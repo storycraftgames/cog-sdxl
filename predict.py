@@ -6,4 +6,4 @@ class Predictor(BasePredictor):
         pass
 
     def predict(self) -> str:
-        return "is_available:"+torch.cuda.is_available()
+        return "is_available:"+str(torch.cuda.is_available())
