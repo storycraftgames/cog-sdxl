@@ -15,7 +15,7 @@ jobs:
       REGISTRY_HOST: us-docker.pkg.dev
       REGISTRY_REPO: storycraft
       MODEL: cog-sdxl
-      VERSION: "0.0.1"
+      VERSION: "0.0.2"
     
     steps:
     - name: Checkout code
